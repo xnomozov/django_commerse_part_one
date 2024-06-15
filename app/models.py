@@ -1,4 +1,6 @@
 from django.db import models
+from django.shortcuts import redirect
+from pyexpat.errors import messages
 
 
 # Create your models here.
@@ -7,7 +9,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
     price = models.FloatField()
-    rating = models.FloatField()
+    rating = models.FloatField(default=0)
     discount = models.FloatField(default=0, null=True)
     quantity = models.IntegerField(default=0, null=True)
 
@@ -29,13 +31,6 @@ class Product(models.Model):
                 'attribute_value': prod_at.value
             })
         return attributes
-
-    def attributes_as_dict(self):
-        attributes = self.get_attribute()
-        attributes_dict = {}
-        for attr in attributes:
-            attributes_dict[attr['attribute_key']] = attr['attribute_value']
-        return attributes_dict
 
 
 class Images(models.Model):
@@ -61,3 +56,16 @@ class ProductAttribute(models.Model):
     product = models.ForeignKey('app.Product', on_delete=models.CASCADE)
     key = models.ForeignKey('app.AttributeKey', on_delete=models.CASCADE)
     value = models.ForeignKey('app.AttributeValue', on_delete=models.CASCADE)
+
+
+class Customers(models.Model):
+    name = models.CharField(max_length=150)
+    email = models.EmailField()
+    phone = models.IntegerField()
+    billing_address = models.CharField(max_length=500)
+    joined = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.name} - {self.joined}'
+
+
