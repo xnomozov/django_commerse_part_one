@@ -2357,7 +2357,7 @@
                                                                         href="{% url 'product_detail'  product.id %}">{{ product.name }}</a></h5>
                                             <p class="fs--1 mb-2 mb-md-3"><a class="text-500" href="#!">Automobiles</a></p>
                                             <ul class="list-unstyled d-none d-lg-block">
-                                                {% for key, value in product.attributes_as_dict.items %}
+                                                {% for key, value in product.get_attributes_as_dict.items %}
                                                     <li><span class="fas fa-circle"
                                                           data-fa-transform="shrink-12"></span><span>{{ key }} :{{ value }} </span>
                                                 {% endfor %}

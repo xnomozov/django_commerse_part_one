@@ -1,3 +1,5 @@
+
+
 from django.db import models
 from django.shortcuts import redirect
 from pyexpat.errors import messages
@@ -31,6 +33,15 @@ class Product(models.Model):
                 'attribute_value': prod_at.value
             })
         return attributes
+
+    @property
+    def get_attributes_as_dict(self) -> dict:
+        attributes = self.get_attribute()
+        attributes_dict = {}
+        for attribute in attributes:
+            attributes_dict[attribute['attribute_key']] = attribute['attribute_value']
+
+        return attributes_dict
 
 
 class Images(models.Model):
@@ -67,5 +78,6 @@ class Customers(models.Model):
 
     def __str__(self):
         return f'{self.name} - {self.joined}'
+
 
 

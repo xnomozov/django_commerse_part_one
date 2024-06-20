@@ -1,3 +1,5 @@
+from msilib.schema import ListView
+
 from django.shortcuts import render, redirect
 
 from app.forms import ProductModelForm, CustomerModelForm
@@ -88,3 +90,19 @@ def delete_customer(request, customer_id):
     customer = Customers.objects.get(id=customer_id)
     customer.delete()
     return redirect("customers")
+
+
+def edit_customer(request, customer_id):
+    customer = Customers.objects.get(id=customer_id)
+    form = CustomerModelForm(instance=customer)
+    if request.method == 'POST':
+        form = CustomerModelForm(request.POST, instance=customer)
+        if form.is_valid():
+            form.save()
+            return redirect("customers")
+    context = {
+        'form': form,
+    }
+    return render(request, 'app/update-customer.html', context)
+
+
