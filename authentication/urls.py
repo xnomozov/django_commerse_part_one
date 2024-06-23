@@ -2,12 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 from app import admin
-from authentication.views import login, logout, register
+from authentication.views import login_page, logout_page, register
 
 urlpatterns = [
-    path('login', login, name='login'),
-    path('logout', logout, name='logout'),
-    path('register', register, name='register'),
+    path('login/', login_page, name='login'),
+    path('logout/', logout_page, name='logout'),
+    path('register/', register, name='register'),
 
 
 ]

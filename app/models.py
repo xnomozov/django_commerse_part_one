@@ -1,8 +1,10 @@
-
-
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.shortcuts import redirect
 from pyexpat.errors import messages
+
+from app.managers import CustomUserManager
 
 
 # Create your models here.
@@ -80,4 +82,18 @@ class Customers(models.Model):
         return f'{self.name} - {self.joined}'
 
 
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+    phone_number = models.IntegerField(unique=True)
+    username = models.CharField(max_length=255, null=True, blank=True)
+    birth_of_date = models.DateField(null=True, blank=True)
 
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=True)
+
+    objects = CustomUserManager()
+    USERNAME_FIELD = 'phone_number'
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.phone_number

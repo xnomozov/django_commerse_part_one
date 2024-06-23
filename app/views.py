@@ -1,5 +1,6 @@
 from msilib.schema import ListView
 
+from django.db.models import Q
 from django.shortcuts import render, redirect
 
 from app.forms import ProductModelForm, CustomerModelForm
@@ -64,7 +65,12 @@ def add_product(request):
 
 
 def customers(request):
-    customer = Customers.objects.all()
+    search_query = request.GET.get('search')
+    if search_query:
+        customer = Customers.objects.filter(
+            Q(name__icontains=search_query) | Q(billing_address__icontains=search_query))
+    else:
+        customer = Customers.objects.all()
     context = {'customers': customer}
     return render(request, 'app/customers.html', context)
 
@@ -104,5 +110,3 @@ def edit_customer(request, customer_id):
         'form': form,
     }
     return render(request, 'app/update-customer.html', context)
-
-

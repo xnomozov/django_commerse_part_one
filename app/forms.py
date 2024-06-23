@@ -1,6 +1,6 @@
 from django import forms
 
-from app.models import Product, Customers
+from app.models import Product, Customers, CustomUser
 
 
 # class ProductForm(forms.Form):
@@ -23,3 +23,10 @@ class CustomerModelForm(forms.ModelForm):
     class Meta:
         model = Customers
         exclude = ()
+
+
+
+
+
+
+
