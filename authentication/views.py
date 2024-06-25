@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
-from authentication.forms import LoginForm
+from app.models import CustomUser
+from authentication.forms import LoginForm, RegisterForm
 
 
 # Create your views here.
@@ -29,4 +30,15 @@ def logout_page(request):
 
 
 def register(request):
-    return render(request, 'authentication/register.html')
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            phone_number = form.cleaned_data['phone_number']
+            password = form.cleaned_data['password']
+            username = form.cleaned_data['username']
+            user = CustomUser.objects.create_user(username=username, password=password, phone_number=phone_number)
+            login(request, user)
+            return redirect('customers')
+    else:
+        form = RegisterForm()
+    return render(request, 'authentication/register.html', {"form": form})
