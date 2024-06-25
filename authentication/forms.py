@@ -22,3 +22,26 @@ class LoginForm(forms.Form):
         except CustomUser.DoesNotExist:
             raise forms.ValidationError("Phone number or Password doesn't match")
         return password
+
+
+class RegisterForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    phone_number = forms.CharField(max_length=15)
+    password = forms.CharField(widget=forms.PasswordInput, max_length=100)
+    confirm_password = forms.CharField(widget=forms.PasswordInput, max_length=100)
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if CustomUser.objects.filter(phone_number=phone_number).exists():
+            raise forms.ValidationError("Phone number already exists")
+        return phone_number
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if password and confirm_password and password != confirm_password:
+            raise forms.ValidationError("Passwords don't match")
+
+        return cleaned_data
