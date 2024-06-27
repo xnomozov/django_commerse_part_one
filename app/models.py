@@ -47,7 +47,7 @@ class Product(models.Model):
 
 
 class Images(models.Model):
-    image = models.ImageField(upload_to='images', null=True)
+    image = models.ImageField(upload_to='images', blank=True,  null=True)
     product = models.ForeignKey('app.Product', on_delete=models.CASCADE, related_name='images')
 
 
@@ -77,6 +77,7 @@ class Customers(models.Model):
     phone = models.IntegerField()
     billing_address = models.CharField(max_length=500)
     joined = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name} - {self.joined}'
@@ -97,3 +98,4 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.phone_number
+
