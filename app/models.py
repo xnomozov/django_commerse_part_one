@@ -1,4 +1,7 @@
+from functools import partial
+
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.shortcuts import redirect
@@ -47,7 +50,7 @@ class Product(models.Model):
 
 
 class Images(models.Model):
-    image = models.ImageField(upload_to='images', null=True)
+    image = models.ImageField(upload_to='images', blank=True,  null=True)
     product = models.ForeignKey('app.Product', on_delete=models.CASCADE, related_name='images')
 
 
@@ -77,6 +80,7 @@ class Customers(models.Model):
     phone = models.IntegerField()
     billing_address = models.CharField(max_length=500)
     joined = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name} - {self.joined}'
@@ -96,4 +100,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return self.phone_number
+        return self.password
+
+    def save(self, *args, **kwargs):
+        if self.password and not self.password.startswith(('pbkdf2_sha256$', 'bcrypt$', 'argon2')):
+            self.password = make_password(self.password)
+
+        super().save(*args, **kwargs)
+
+

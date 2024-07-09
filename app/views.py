@@ -1,5 +1,6 @@
 from msilib.schema import ListView
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.shortcuts import render, redirect
 
@@ -10,8 +11,18 @@ from app.models import Product, Customers
 
 # Create your views here.
 def index(request):
+    page = request.GET.get('page', '')
     products = Product.objects.all().order_by('-id')
-    context = {'products': products}
+    paginator = Paginator(products, 1)
+
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    context = {'page_obj': page_obj, }
 
     return render(request, 'app/index.html', context)
 
@@ -31,28 +42,6 @@ def prod_attr(request, product_id):
     return render(request, 'app/index.html', context)
 
 
-# def add_product(request):
-#     # form = ProductForm()
-#     if request.method == 'POST':
-#         form = ProductForm(request.POST)
-#         name = request.POST['name']
-#         price = request.POST['price']
-#         rating = request.POST['rating']
-#         description = request.POST['description']
-#         discount = request.POST['discount']
-#         quantity = request.POST['quantity']
-#         product = Product(name=name, price=price, description=description, quantity=quantity, discount=discount,
-#                           rating=rating)
-#         if form.is_valid():
-#             product.save()
-#             return redirect('index')
-#     else:
-#         form = ProductForm()
-#
-#     context = {'form': form}
-#     return render(request, 'app/add-product.html', context)
-
-
 def add_product(request):
     form = ProductModelForm()
     if request.method == 'POST':
@@ -66,12 +55,24 @@ def add_product(request):
 
 def customers(request):
     search_query = request.GET.get('search')
+    customer = Customers.objects.all()
+
     if search_query:
-        customer = Customers.objects.filter(
-            Q(name__icontains=search_query) | Q(billing_address__icontains=search_query))
-    else:
-        customer = Customers.objects.all()
-    context = {'customers': customer}
+        customer = customer.filter(
+            Q(name__icontains=search_query) | Q(billing_address__icontains=search_query)
+        )
+
+    paginator = Paginator(customer, 1)
+    page = request.GET.get('page')
+
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    context = {'page_obj': page_obj}
     return render(request, 'app/customers.html', context)
 
 

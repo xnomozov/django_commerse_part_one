@@ -25,8 +25,9 @@ class CustomerModelForm(forms.ModelForm):
         exclude = ()
 
 
+class CustomUserModelForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
 
-
-
-
-
+    class Meta:
+        model = CustomUser
+        exclude = ()

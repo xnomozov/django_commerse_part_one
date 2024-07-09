@@ -1,3 +1,4 @@
+from django.contrib.admin import register
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
@@ -25,20 +26,22 @@ def login_page(request):
 
 def logout_page(request):
     logout(request)
-
     return render(request, 'authentication/logout.html')
 
 
-def register(request):
+def register_page(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
+            username = form.cleaned_data['username']
             phone_number = form.cleaned_data['phone_number']
             password = form.cleaned_data['password']
-            username = form.cleaned_data['username']
-            user = CustomUser.objects.create_user(username=username, password=password, phone_number=phone_number)
+
+            user = CustomUser.objects.create_user(username=username, phone_number=phone_number, password=password)
             login(request, user)
             return redirect('customers')
+
     else:
         form = RegisterForm()
-    return render(request, 'authentication/register.html', {"form": form})
+
+    return render(request, 'authentication/register.html', {'form': form})
