@@ -72,7 +72,9 @@ def customers(request):
     except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)
 
-    context = {'page_obj': page_obj}
+    context = {'page_obj': page_obj,
+               'search_query': search_query,
+               'customer': customer}
     return render(request, 'app/customers.html', context)
 
 
