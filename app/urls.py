@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
-from app.views import index, product_detail, prod_attr, add_product, customers, customer_detail,add_customer, customer_detail,delete_customer, edit_customer, delete_customer
-
+from app.views import index, product_detail, prod_attr, add_product, customers, customer_detail, add_customer, \
+    customer_detail, delete_customer, edit_customer, delete_customer, export_data
 
 urlpatterns = [
     path('index/', index, name='index'),
@@ -12,4 +12,5 @@ urlpatterns = [
     path('customer-details/<int:customer_id>', customer_detail, name='customer_detail', ),
     path('delete-customer/<int:customer_id>', delete_customer, name='delete_customer'),
     path('edit_customer/<int:customer_id>', edit_customer, name='edit_customer'),
+    path('export_data/', export_data, name='export_data'),
 ]

@@ -1,9 +1,13 @@
+import csv
 from msilib.schema import ListView
-
+import json
+from django.apps import apps
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.serializers import json1
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
+from openpyxl import Workbook
 from app.forms import ProductModelForm, CustomerModelForm
 # from app.forms import ProductForm
 from app.models import Product, Customers
@@ -62,7 +66,7 @@ def customers(request):
             Q(name__icontains=search_query) | Q(billing_address__icontains=search_query)
         )
 
-    paginator = Paginator(customer, 1)
+    paginator = Paginator(customer, 5)
     page = request.GET.get('page')
 
     try:
@@ -113,3 +117,43 @@ def edit_customer(request, customer_id):
         'form': form,
     }
     return render(request, 'app/update-customer.html', context)
+
+
+def export_data(request):
+    format_type = request.GET.get('format', 'csv')
+    model = apps.get_model(app_label='app', model_name='Customers')
+
+    if format_type == 'csv':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=customers.csv'
+
+        writer = csv.writer(response)
+        writer.writerow([field.name for field in model._meta.fields])
+
+        for obj in model.objects.all().values_list():
+            writer.writerow(obj)
+    elif format_type == 'json':
+        response = HttpResponse(content_type='application/json')
+        data = list(model.objects.all().values('name', 'email', 'phone', 'billing_address'))
+        response.write(json.dumps(data, indent=4))
+        response['Content-Disposition'] = 'attachment; filename=customers.json'
+
+    elif format_type == 'xlsx':
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = 'Customers'
+        ws.append(['Name', 'Email', 'Phone', 'Billing Address'])
+        for obj in model.objects.all().values_list('name', 'email', 'phone', 'billing_address'):
+            ws.append(obj)
+        wb.save(response)
+        response['Content-Disposition'] = 'attachment; filename=customers.xlsx'
+    else:
+        response = HttpResponse(status=404)
+        response.content = 'Bad request'
+
+    return response
+
+
+

@@ -85,7 +85,8 @@
                     <a class="navbar-brand me-1 me-sm-3" href="../../index.html">
                         <div class="d-flex align-items-center"><img class="me-2"
                                                                     src="{% static 'app/assets/img/icons/spot-illustrations/falcon.png' %}"
-                                                                    alt="" width="40"/><span class="font-sans-serif">falcon</span>
+                                                                    alt="" width="40"/><span
+                                class="font-sans-serif">falcon</span>
                         </div>
                     </a>
                     <ul class="navbar-nav align-items-center d-none d-lg-block">
@@ -432,245 +433,305 @@
                                 </div>
                                 <div id="table-customers-replace-element">
 
-                                    <button class="btn btn-falcon-default btn-sm" type="button"><a
-                                            href="{% url 'add_customers' %}"><span class="fas fa-plus"
-                                                                                   data-fa-transform="shrink-3 down-2"></span><span
-                                            class="d-none d-sm-inline-block ms-1">New</span></button>
-                                    <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span
-                                            class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span><span
-                                            class="d-none d-sm-inline-block ms-1">Filter</span></button>
-                                    <button class="btn btn-falcon-default btn-sm" type="button"><span
-                                            class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
-                                            class="d-none d-sm-inline-block ms-1">Export</span></button>
-                                </div>
+                                    <!-- Button to add new customers -->
+                                    <a href="{% url 'add_customers' %}" class="btn btn-falcon-default btn-sm"
+                                       style="text-decoration: none; color: inherit;">
+                                        <button type="button" class="btn btn-falcon-default btn-sm">
+                                            <span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span>
+                                            <span class="d-none d-sm-inline-block ms-1">New</span>
+                                        </button>
+                                    </a>
 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-sm table-striped fs--1 mb-0 overflow-hidden">
-                                <thead class="bg-200 text-900">
-                                <tr>
-                                    <th>
-                                        <div class="form-check fs-0 mb-0 d-flex align-items-center">
-                                            <input class="form-check-input" id="checkbox-bulk-customers-select"
-                                                   type="checkbox"
-                                                   data-bulk-select='{"body":"table-customers-body","actions":"table-customers-actions","replacedElement":"table-customers-replace-element"}'/>
-                                        </div>
-                                    </th>
-                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="name">Name</th>
-                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="email">Email</th>
-                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="phone">Phone</th>
-                                    <th class="sort pe-1 align-middle white-space-nowrap ps-5" data-sort="address"
-                                        style="min-width: 200px;">Billing Address
-                                    </th>
-                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="joined">Joined</th>
-                                    <th class="align-middle no-sort"></th>
-                                </tr>
-                                </thead>
-                                <tbody class="list" id="table-customers-body">
-                                {% if not search_query %}
-                                    {% for customer in page_obj %}
-                                        <tr class="btn-reveal-trigger">
-                                        <td class="align-middle py-2" style="width: 28px;">
-                                            <div class="form-check fs-0 mb-0 d-flex align-items-center">
-                                                <input class="form-check-input" type="checkbox" id="customer-0"
-                                                       data-bulk-select-row="data-bulk-select-row"/>
-                                            </div>
-                                        </td>
-                                        <td class="name align-middle white-space-nowrap py-2"><a
-                                                href="{% url 'customer_detail' customer.id %}">
-                                            <div class="d-flex d-flex align-items-center">
-                                                <div class="avatar avatar-xl me-2">
-                                                    <div class="avatar-name rounded-circle"><span>RA</span></div>
-                                                </div>
-                                                <div class="flex-1">
-                                                    <h5 class="mb-0 fs--1">{{ customer.name }}</h5>
-                                                </div>
-                                            </div>
-                                        </a></td>
-                                        <td class="email align-middle py-2"><a
-                                                href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
-                                        <td class="phone align-middle white-space-nowrap py-2"><a
-                                                href="tel:{{ customer.phone }}">{{ customer.phone }}</a></td>
-                                        <td class="address align-middle white-space-nowrap ps-5 py-2">{{ customer.billing_address }}</td>
-                                        <td class="joined align-middle py-2">{{ customer.joined }}</td>
-                                        <td class="align-middle white-space-nowrap py-2 text-end">
+                                    <div>
+                                        <!-- Export form -->
+                                        <form action="{% url 'export_data' %}" method="get">
+                                            <label for="format" style="margin-right: 5px;">Export as:</label>
+                                            <select id="format" name="format">
+                                                <option value="none" selected>...</option>
+                                                <option value="json">json</option>
+                                                <option value="xlsx">xlsx</option>
+                                                <option value="csv">csv</option>
+                                            </select>
+                                            <button class="btn btn-falcon-default btn-sm" type="submit">
+                                                <span class="fas fa-external-link-alt"
+                                                      data-fa-transform="shrink-3 down-2"></span>
+                                                <span class="d-none d-sm-inline-block ms-1">Export</span>
+                                            </button>
+                                        </form>
 
-                                        <div class="dropdown font-sans-serif position-static">
-                                        <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal"
-                                                type="button" id="customer-dropdown-0" data-bs-toggle="dropdown"
-                                                data-boundary="window" aria-haspopup="true" aria-expanded="false"><span
-                                                class="fas fa-ellipsis-h fs--1"></span></button>
-                                        <div class="dropdown-menu dropdown-menu-end border py-0"
-                                             aria-labelledby="customer-dropdown-0">
-                                        <div class="bg-white py-2"><a class="dropdown-item"
-                                                                      href="{% url 'edit_customer' customer.id %}">Edit</a><a
-                                                class="dropdown-item text-danger"
-                                                href="{% url 'delete_customer' customer.id %}">Delete</a></div>
-                                    {% endfor %}
-                                {% else %}
-                                    {% for customer in customer %}
-                                        <tr class="btn-reveal-trigger">
-                                        <td class="align-middle py-2" style="width: 28px;">
-                                            <div class="form-check fs-0 mb-0 d-flex align-items-center">
-                                                <input class="form-check-input" type="checkbox" id="customer-0"
-                                                       data-bulk-select-row="data-bulk-select-row"/>
-                                            </div>
-                                        </td>
-                                        <td class="name align-middle white-space-nowrap py-2"><a
-                                                href="{% url 'customer_detail' customer.id %}">
-                                            <div class="d-flex d-flex align-items-center">
-                                                <div class="avatar avatar-xl me-2">
-                                                    <div class="avatar-name rounded-circle"><span>RA</span></div>
-                                                </div>
-                                                <div class="flex-1">
-                                                    <h5 class="mb-0 fs--1">{{ customer.name }}</h5>
-                                                </div>
-                                            </div>
-                                        </a></td>
-                                        <td class="email align-middle py-2"><a
-                                                href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
-                                        <td class="phone align-middle white-space-nowrap py-2"><a
-                                                href="tel:{{ customer.phone }}">{{ customer.phone }}</a></td>
-                                        <td class="address align-middle white-space-nowrap ps-5 py-2">{{ customer.billing_address }}</td>
-                                        <td class="joined align-middle py-2">{{ customer.joined }}</td>
-                                        <td class="align-middle white-space-nowrap py-2 text-end">
-
-                                        <div class="dropdown font-sans-serif position-static">
-                                        <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal"
-                                                type="button" id="customer-dropdown-0" data-bs-toggle="dropdown"
-                                                data-boundary="window" aria-haspopup="true" aria-expanded="false"><span
-                                                class="fas fa-ellipsis-h fs--1"></span></button>
-                                        <div class="dropdown-menu dropdown-menu-end border py-0"
-                                             aria-labelledby="customer-dropdown-0">
-                                        <div class="bg-white py-2"><a class="dropdown-item"
-                                                                      href="{% url 'edit_customer' customer.id %}">Edit</a><a
-                                                class="dropdown-item text-danger"
-                                                href="{% url 'delete_customer' customer.id %}">Delete</a></div>
-                                    {% endfor %}
-
-
-                                {% endif %}
-                                </div>
-                                </div>
-                                </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="pagination-container mt-3">
-                    <ul class="pagination justify-content-center">
-                        {% if page_obj.has_previous %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">&laquo;&laquo;</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="?page=
-                                    {{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo;</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled"><a class="page-link" href="#">&laquo;&laquo;</a></li>
-                            <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
-                        {% endif %}
-
-                        {% for num in page_obj.paginator.page_range %}
-                            {% if page_obj.number == num %}
-                                <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
-                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                                <li class="page-item"><a class="page-link" href="?page=
-                                        {{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-
-                        {% if page_obj.has_next %}
-                            <li class="page-item"><a class="page-link" href="?page=
-                                    {{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">&raquo;</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="?page=
-                                    {{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">&raquo;&raquo;</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
-                            <li class="page-item disabled"><a class="page-link" href="#">&raquo;&raquo;</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-
-                <div class="modal fade" id="authentication-modal" tabindex="-1" role="dialog"
-                     aria-labelledby="authentication-modal-label" aria-hidden="true">
-                    <div class="modal-dialog mt-6" role="document">
-                        <div class="modal-content border-0">
-                            <div class="modal-header px-5 position-relative modal-shape-header bg-shape">
-                                <div class="position-relative z-index-1 light">
-                                    <h4 class="mb-0 text-white" id="authentication-modal-label">Register</h4>
-                                    <p class="fs--1 mb-0 text-white">Please create your free Falcon account</p>
-                                </div>
-                                <button class="btn-close btn-close-white position-absolute top-0 end-0 mt-2 me-2"
-                                        data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body py-4 px-5">
-                                <form>
-                                    <div class="mb-3">
-                                        <label class="form-label" for="modal-auth-name">Name</label>
-                                        <input class="form-control" type="text" autocomplete="on" id="modal-auth-name"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label" for="modal-auth-email">Email address</label>
-                                        <input class="form-control" type="email" autocomplete="on"
-                                               id="modal-auth-email"/>
-                                    </div>
-                                    <div class="row gx-2">
-                                        <div class="mb-3 col-sm-6">
-                                            <label class="form-label" for="modal-auth-password">Password</label>
-                                            <input class="form-control" type="password" autocomplete="on"
-                                                   id="modal-auth-password"/>
-                                        </div>
-                                        <div class="mb-3 col-sm-6">
-                                            <label class="form-label" for="modal-auth-confirm-password">Confirm
-                                                Password</label>
-                                            <input class="form-control" type="password" autocomplete="on"
-                                                   id="modal-auth-confirm-password"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox"
-                                               id="modal-auth-register-checkbox"/>
-                                        <label class="form-label" for="modal-auth-register-checkbox">I accept the <a
-                                                href="#!">terms </a>and <a href="#!">privacy policy</a></label>
-                                    </div>
-                                    <div class="mb-3">
-                                        <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">
-                                            Register
+                                        <!-- Filter button -->
+                                        <button class="btn btn-falcon-default btn-sm mx-2" type="button">
+                                            <span class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span>
+                                            <span class="d-none d-sm-inline-block ms-1">Filter</span>
                                         </button>
                                     </div>
-                                </form>
-                                <div class="position-relative mt-5">
-                                    <hr class="bg-300"/>
-                                    <div class="divider-content-center">or register with</div>
                                 </div>
-                                <div class="row g-2 mt-2">
-                                    <div class="col-sm-6"><a class="btn btn-outline-google-plus btn-sm d-block w-100"
-                                                             href="#"><span class="fab fa-google-plus-g me-2"
-                                                                            data-fa-transform="grow-8"></span>
-                                        google</a>
+
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-striped fs--1 mb-0 overflow-hidden">
+                                        <thead class="bg-200 text-900">
+                                        <tr>
+                                            <th>
+                                                <div class="form-check fs-0 mb-0 d-flex align-items-center">
+                                                    <input class="form-check-input" id="checkbox-bulk-customers-select"
+                                                           type="checkbox"
+                                                           data-bulk-select='{"body":"table-customers-body","actions":"table-customers-actions","replacedElement":"table-customers-replace-element"}'/>
+                                                </div>
+                                            </th>
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="name">
+                                                Name
+                                            </th>
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="email">
+                                                Email
+                                            </th>
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="phone">
+                                                Phone
+                                            </th>
+                                            <th class="sort pe-1 align-middle white-space-nowrap ps-5"
+                                                data-sort="address"
+                                                style="min-width: 200px;">Billing Address
+                                            </th>
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="joined">
+                                                Joined
+                                            </th>
+                                            <th class="align-middle no-sort"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="list" id="table-customers-body">
+                                        {% if not search_query %}
+                                            {% for customer in page_obj %}
+                                                <tr class="btn-reveal-trigger">
+                                                <td class="align-middle py-2" style="width: 28px;">
+                                                    <div class="form-check fs-0 mb-0 d-flex align-items-center">
+                                                        <input class="form-check-input" type="checkbox" id="customer-0"
+                                                               data-bulk-select-row="data-bulk-select-row"/>
+                                                    </div>
+                                                </td>
+                                                <td class="name align-middle white-space-nowrap py-2"><a
+                                                        href="{% url 'customer_detail' customer.id %}">
+                                                    <div class="d-flex d-flex align-items-center">
+                                                        <div class="avatar avatar-xl me-2">
+                                                            <div class="avatar-name rounded-circle"><span>RA</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-1">
+                                                            <h5 class="mb-0 fs--1">{{ customer.name }}</h5>
+                                                        </div>
+                                                    </div>
+                                                </a></td>
+                                                <td class="email align-middle py-2"><a
+                                                        href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
+                                                <td class="phone align-middle white-space-nowrap py-2"><a
+                                                        href="tel:{{ customer.phone }}">{{ customer.phone }}</a></td>
+                                                <td class="address align-middle white-space-nowrap ps-5 py-2">{{ customer.billing_address }}</td>
+                                                <td class="joined align-middle py-2">{{ customer.joined }}</td>
+                                                <td class="align-middle white-space-nowrap py-2 text-end">
+
+                                                <div class="dropdown font-sans-serif position-static">
+                                                <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal"
+                                                        type="button" id="customer-dropdown-0" data-bs-toggle="dropdown"
+                                                        data-boundary="window" aria-haspopup="true"
+                                                        aria-expanded="false"><span
+                                                        class="fas fa-ellipsis-h fs--1"></span></button>
+                                                <div class="dropdown-menu dropdown-menu-end border py-0"
+                                                     aria-labelledby="customer-dropdown-0">
+                                                <div class="bg-white py-2"><a class="dropdown-item"
+                                                                              href="{% url 'edit_customer' customer.id %}">Edit</a><a
+                                                        class="dropdown-item text-danger"
+                                                        href="{% url 'delete_customer' customer.id %}">Delete</a></div>
+                                            {% endfor %}
+                                        {% else %}
+                                            {% for customer in customer %}
+                                                <tr class="btn-reveal-trigger">
+                                                <td class="align-middle py-2" style="width: 28px;">
+                                                    <div class="form-check fs-0 mb-0 d-flex align-items-center">
+                                                        <input class="form-check-input" type="checkbox" id="customer-0"
+                                                               data-bulk-select-row="data-bulk-select-row"/>
+                                                    </div>
+                                                </td>
+                                                <td class="name align-middle white-space-nowrap py-2"><a
+                                                        href="{% url 'customer_detail' customer.id %}">
+                                                    <div class="d-flex d-flex align-items-center">
+                                                        <div class="avatar avatar-xl me-2">
+                                                            <div class="avatar-name rounded-circle"><span>RA</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-1">
+                                                            <h5 class="mb-0 fs--1">{{ customer.name }}</h5>
+                                                        </div>
+                                                    </div>
+                                                </a></td>
+                                                <td class="email align-middle py-2"><a
+                                                        href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
+                                                <td class="phone align-middle white-space-nowrap py-2"><a
+                                                        href="tel:{{ customer.phone }}">{{ customer.phone }}</a></td>
+                                                <td class="address align-middle white-space-nowrap ps-5 py-2">{{ customer.billing_address }}</td>
+                                                <td class="joined align-middle py-2">{{ customer.joined }}</td>
+                                                <td class="align-middle white-space-nowrap py-2 text-end">
+
+                                                <div class="dropdown font-sans-serif position-static">
+                                                <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal"
+                                                        type="button" id="customer-dropdown-0" data-bs-toggle="dropdown"
+                                                        data-boundary="window" aria-haspopup="true"
+                                                        aria-expanded="false"><span
+                                                        class="fas fa-ellipsis-h fs--1"></span></button>
+                                                <div class="dropdown-menu dropdown-menu-end border py-0"
+                                                     aria-labelledby="customer-dropdown-0">
+                                                <div class="bg-white py-2"><a class="dropdown-item"
+                                                                              href="{% url 'edit_customer' customer.id %}">Edit</a><a
+                                                        class="dropdown-item text-danger"
+                                                        href="{% url 'delete_customer' customer.id %}">Delete</a></div>
+                                            {% endfor %}
+
+
+                                        {% endif %}
+                                        </div>
+                                        </div>
+                                        </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="pagination-container mt-3">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">&laquo;&laquo;</a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo;</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link" href="#">&laquo;&laquo;</a></li>
+                                    <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+                                {% endif %}
+
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == num %}
+                                        <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                        <li class="page-item"><a class="page-link" href="?page=
+
+
+
+
+
+
+
+                                                {{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if page_obj.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page=
+
+
+
+
+
+
+
+                                            {{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">&raquo;</a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="?page=
+
+
+
+
+
+
+
+                                            {{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">&raquo;&raquo;</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+                                    <li class="page-item disabled"><a class="page-link" href="#">&raquo;&raquo;</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                        <div class="modal fade" id="authentication-modal" tabindex="-1" role="dialog"
+                             aria-labelledby="authentication-modal-label" aria-hidden="true">
+                            <div class="modal-dialog mt-6" role="document">
+                                <div class="modal-content border-0">
+                                    <div class="modal-header px-5 position-relative modal-shape-header bg-shape">
+                                        <div class="position-relative z-index-1 light">
+                                            <h4 class="mb-0 text-white" id="authentication-modal-label">Register</h4>
+                                            <p class="fs--1 mb-0 text-white">Please create your free Falcon account</p>
+                                        </div>
+                                        <button class="btn-close btn-close-white position-absolute top-0 end-0 mt-2 me-2"
+                                                data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="col-sm-6"><a class="btn btn-outline-facebook btn-sm d-block w-100"
-                                                             href="#"><span
-                                            class="fab fa-facebook-square me-2" data-fa-transform="grow-8"></span>
-                                        facebook</a>
+                                    <div class="modal-body py-4 px-5">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="modal-auth-name">Name</label>
+                                                <input class="form-control" type="text" autocomplete="on"
+                                                       id="modal-auth-name"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="modal-auth-email">Email address</label>
+                                                <input class="form-control" type="email" autocomplete="on"
+                                                       id="modal-auth-email"/>
+                                            </div>
+                                            <div class="row gx-2">
+                                                <div class="mb-3 col-sm-6">
+                                                    <label class="form-label" for="modal-auth-password">Password</label>
+                                                    <input class="form-control" type="password" autocomplete="on"
+                                                           id="modal-auth-password"/>
+                                                </div>
+                                                <div class="mb-3 col-sm-6">
+                                                    <label class="form-label" for="modal-auth-confirm-password">Confirm
+                                                        Password</label>
+                                                    <input class="form-control" type="password" autocomplete="on"
+                                                           id="modal-auth-confirm-password"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="modal-auth-register-checkbox"/>
+                                                <label class="form-label" for="modal-auth-register-checkbox">I accept
+                                                    the <a
+                                                            href="#!">terms </a>and <a href="#!">privacy
+                                                        policy</a></label>
+                                            </div>
+                                            <div class="mb-3">
+                                                <button class="btn btn-primary d-block w-100 mt-3" type="submit"
+                                                        name="submit">
+                                                    Register
+                                                </button>
+                                            </div>
+                                        </form>
+                                        <div class="position-relative mt-5">
+                                            <hr class="bg-300"/>
+                                            <div class="divider-content-center">or register with</div>
+                                        </div>
+                                        <div class="row g-2 mt-2">
+                                            <div class="col-sm-6"><a
+                                                    class="btn btn-outline-google-plus btn-sm d-block w-100"
+                                                    href="#"><span class="fab fa-google-plus-g me-2"
+                                                                   data-fa-transform="grow-8"></span>
+                                                google</a>
+                                            </div>
+                                            <div class="col-sm-6"><a
+                                                    class="btn btn-outline-facebook btn-sm d-block w-100"
+                                                    href="#"><span
+                                                    class="fab fa-facebook-square me-2"
+                                                    data-fa-transform="grow-8"></span>
+                                                facebook</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
     </main>
     <!-- ===============================================-->
     <!--    End of Main Content-->

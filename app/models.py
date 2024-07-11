@@ -1,11 +1,9 @@
-from functools import partial
+from adminsortable2.admin import SortableAdminMixin
 
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
-from django.shortcuts import redirect
-from pyexpat.errors import messages
 
 from app.managers import CustomUserManager
 
@@ -19,6 +17,10 @@ class Product(models.Model):
     rating = models.FloatField(default=0)
     discount = models.FloatField(default=0, null=True)
     quantity = models.IntegerField(default=0, null=True)
+    order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
+
+    class Meta:
+        ordering = ('order',)
 
     @property
     def discounted_price(self):
@@ -50,7 +52,7 @@ class Product(models.Model):
 
 
 class Images(models.Model):
-    image = models.ImageField(upload_to='images', blank=True,  null=True)
+    image = models.ImageField(upload_to='images', blank=True, null=True)
     product = models.ForeignKey('app.Product', on_delete=models.CASCADE, related_name='images')
 
 
@@ -81,6 +83,11 @@ class Customers(models.Model):
     billing_address = models.CharField(max_length=500)
     joined = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
+
+    class Meta:
+        ordering = ('order',)
+        verbose_name = 'Customers'
 
     def __str__(self):
         return f'{self.name} - {self.joined}'
@@ -107,5 +114,3 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             self.password = make_password(self.password)
 
         super().save(*args, **kwargs)
-
-

@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'authentication',
+    'import_export',
+    'adminsortable2'
 
 ]
 JET_DEFAULT_THEME = 'green'
