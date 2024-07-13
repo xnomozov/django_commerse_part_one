@@ -1,16 +1,18 @@
-from django.contrib import admin
-from django.urls import path, include
-from app.views import index, product_detail, prod_attr, add_product, customers, customer_detail, add_customer, \
-    customer_detail, delete_customer, edit_customer, delete_customer, export_data
+from django.urls import path
+from app.views.app.views import DeleteProduct, ProductDetailTemplateView, AddProductView, ProductListView, EditProductTemplateView
+from app.views.customers.views import CustomerDetailView, CustomersTemplateView, \
+    EditCustomerView, DeleteCustomerView, AddCustomerView, export_data
 
 urlpatterns = [
-    path('index/', index, name='index'),
-    path('product_details/<int:product_id>', product_detail, name='product_detail'),
-    path('add-product/', add_product, name='add_product'),
-    path('customers/', customers, name='customers'),
-    path('customers/add-customer/', add_customer, name='add_customers'),
-    path('customer-details/<int:customer_id>', customer_detail, name='customer_detail', ),
-    path('delete-customer/<int:customer_id>', delete_customer, name='delete_customer'),
-    path('edit_customer/<int:customer_id>', edit_customer, name='edit_customer'),
+    path('index/', ProductListView.as_view(), name='index'),
+    path('product_details/<int:product_id>', ProductDetailTemplateView.as_view(), name='product_detail'),
+    path('add-product/', AddProductView.as_view(), name='add_product'),
+    path('customers/', CustomersTemplateView.as_view(), name='customers'),
+    path('add-customer/', AddCustomerView.as_view(), name='add_customers'),
+    path('customer-details/<int:customer_id>', CustomerDetailView.as_view(), name='customer_detail', ),
+    path('delete-customer/<int:customer_id>', DeleteCustomerView.as_view(), name='delete_customer'),
+    path('edit_customer/<int:customer_id>', EditCustomerView.as_view(), name='edit_customer'),
     path('export_data/', export_data, name='export_data'),
+    path('delete-product/<int:product_id>', DeleteProduct.as_view(), name='delete_product'),
+    path('edit-product/<int:product_id>', EditProductTemplateView.as_view(), name='edit_product'),
 ]
