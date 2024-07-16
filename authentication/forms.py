@@ -24,11 +24,13 @@ class LoginForm(forms.Form):
         return password
 
 
-class RegisterForm(forms.Form):
-    username = forms.CharField(max_length=150)
-    phone_number = forms.CharField(max_length=15)
+class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, max_length=100)
     confirm_password = forms.CharField(widget=forms.PasswordInput, max_length=100)
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'phone_number', 'password')
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get('phone_number')
@@ -45,3 +47,14 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError("Passwords don't match")
 
         return cleaned_data
+
+
+class EmailForm(forms.Form):
+    subject = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)
+    email_from = forms.EmailField()
+    email_to = forms.EmailField()
+
+
+
+
