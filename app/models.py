@@ -94,7 +94,7 @@ class Customers(models.Model):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    phone_number = models.IntegerField(unique=True)
+    email = models.EmailField(unique=True)
     username = models.CharField(max_length=255, null=True, blank=True)
     birth_of_date = models.DateField(null=True, blank=True)
 
@@ -103,7 +103,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=True)
 
     objects = CustomUserManager()
-    USERNAME_FIELD = 'phone_number'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     def __str__(self):

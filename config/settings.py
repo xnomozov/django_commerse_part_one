@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'app',
     'authentication',
     'import_export',
-    'adminsortable2'
+    'adminsortable2',
+    'django_recaptcha'
 
 ]
 JET_DEFAULT_THEME = 'green'
@@ -145,3 +146,7 @@ EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+PASSWORD_RESET_TIMEOUT = 300
+RECAPTCHA_PUBLIC_KEY = ' 6LchaBMqAAAAACW2565N_AOLhWnwyMRaPpBiOjnB'
+RECAPTCHA_PRIVATE_KEY = '6LchaBMqAAAAAH8G-7yijFEXpus_9Bs6HPSEoalR'

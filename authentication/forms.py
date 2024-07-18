@@ -1,42 +1,45 @@
 from django import forms
 from app.models import CustomUser
+from django_recaptcha.fields import ReCaptchaField
 
-
+from django_recaptcha.fields import ReCaptchaField
 class LoginForm(forms.Form):
-    phone_number = forms.IntegerField()
+    email = forms.IntegerField()
     password = forms.CharField(max_length=100)
 
-    def clean_phone_number(self):
-        phone_number = self.data.get('phone_number')
-        if not CustomUser.objects.filter(phone_number=phone_number):
-            raise forms.ValidationError("Phone number doesn't exist")
-        return phone_number
+    def clean_email(self):
+        email = self.data.get('email')
+        if not CustomUser.objects.filter(email=email):
+            raise forms.ValidationError("Email doesn't exist")
+        return email
 
     def clean_password(self):
         password = self.data.get('password')
-        phone_number = self.clean_phone_number()
+        email = self.clean_email()
         try:
-            user = CustomUser.objects.get(phone_number=phone_number)
+            user = CustomUser.objects.get(email=email)
             if not user.check_password(password):
-                raise forms.ValidationError("Phone number or Password doesn't match")
+                raise forms.ValidationError("Email or Password doesn't match")
         except CustomUser.DoesNotExist:
-            raise forms.ValidationError("Phone number or Password doesn't match")
+            raise forms.ValidationError("Email or Password doesn't match")
         return password
 
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, max_length=100)
     confirm_password = forms.CharField(widget=forms.PasswordInput, max_length=100)
+    recaptcha = ReCaptchaField()
+
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'phone_number', 'password')
+        fields = ('username', 'email', 'password')
 
-    def clean_phone_number(self):
-        phone_number = self.cleaned_data.get('phone_number')
-        if CustomUser.objects.filter(phone_number=phone_number).exists():
-            raise forms.ValidationError("Phone number already exists")
-        return phone_number
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email already exists")
+        return email
 
     def clean(self):
         cleaned_data = super().clean()
@@ -54,7 +57,5 @@ class EmailForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
     email_from = forms.EmailField()
     email_to = forms.EmailField()
-
-
 
 

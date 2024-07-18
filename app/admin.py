@@ -16,16 +16,16 @@ admin.site.register(ProductAttribute)
 class CustomUserResource(resources.ModelResource):
     class Meta:
         model = CustomUser
-        fields = ('phone_number', 'username', 'birth_of_date', 'is_active', 'is_staff', 'is_superuser',)
+        fields = ('email', 'username', 'birth_of_date', 'is_active', 'is_staff', 'is_superuser',)
 
 
 @admin.register(CustomUser)
 class CustomUserAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = CustomUserResource
 
-    list_display = ('username', 'phone_number', 'is_staff', 'is_superuser')
+    list_display = ('username', 'email', 'is_staff', 'is_superuser')
     list_filter = ('is_staff', 'is_superuser')
-    search_fields = ('username', 'phone_number')
+    search_fields = ('username', 'email')
     form = CustomUserModelForm
 
 
