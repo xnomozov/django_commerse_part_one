@@ -20,28 +20,8 @@ from authentication.forms import LoginForm, RegisterForm, EmailForm
 
 # Create your views here.
 
-# def login_page(request):
-#     if request.method == 'POST':
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             email = form.cleaned_data['email']
-#             password = form.cleaned_data['password']
-#             user = authenticate(request, email=email, password=password)
-#             if user:
-#                 login(request, user)
-#                 return redirect('customers')
-#     else:
-#         form = LoginForm()
-#
-#     return render(request, 'authentication/login.html', {'form': form})
-
-class LoginView(View):
-    def get(self, request):
-        form = LoginForm()
-        context = {'form': form}
-        return render(request, 'authentication/login.html', context)
-
-    def post(self, request):
+def login_page(request):
+    if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
@@ -50,6 +30,27 @@ class LoginView(View):
             if user:
                 login(request, user)
                 return redirect('customers')
+    else:
+        form = LoginForm()
+
+    return render(request, 'authentication/login.html', {'form': form})
+
+# class LoginView(View):
+#     def get(self, request):
+#         form = LoginForm()
+#         context = {'form': form}
+#         return render(request, 'authentication/login.html', context)
+#
+#     def post(self, request):
+#         form = LoginForm(request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#             password = form.cleaned_data['password']
+#             user = authenticate(request, email=email, password=password)
+#             if user:
+#                 login(request, user)
+#                 return redirect('customers')
+#         return render(request, 'authentication/login.html', {'form': form})
 
 
 def logout_page(request):

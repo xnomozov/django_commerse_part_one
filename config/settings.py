@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'authentication',
     'import_export',
     'adminsortable2',
-    'django_recaptcha'
+    'django_recaptcha',
+    'social_django'
 
 ]
 JET_DEFAULT_THEME = 'green'
@@ -150,3 +151,20 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 PASSWORD_RESET_TIMEOUT = 300
 RECAPTCHA_PUBLIC_KEY = ' 6LchaBMqAAAAACW2565N_AOLhWnwyMRaPpBiOjnB'
 RECAPTCHA_PRIVATE_KEY = '6LchaBMqAAAAAH8G-7yijFEXpus_9Bs6HPSEoalR'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+]
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')  # Google Client Secre
+
+SOCIAL_AUTH_FACEBOOK_KEY = env('SOCIAL_AUTH_FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = env('SOCIAL_AUTH_FACEBOOK_SECRET')
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+
+LOGIN_REDIRECT_URL = '/app/customers'
+SOCIAL_AUTH_TWITTER_KEY = env('SOCIAL_AUTH_TWITTER_KEY')  # Twitter API Key
+SOCIAL_AUTH_TWITTER_SECRET = env('SOCIAL_AUTH_TWITTER_SECRET')
