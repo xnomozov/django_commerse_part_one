@@ -28,7 +28,7 @@ def login_page(request):
             password = form.cleaned_data['password']
             user = authenticate(request, email=email, password=password)
             if user:
-                login(request, user)
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('customers')
     else:
         form = LoginForm()
@@ -68,7 +68,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         messages.success(request, 'Your account has been activated successfully!😊')
         return redirect('customers')
     else:

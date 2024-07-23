@@ -1,0 +1,9 @@
+{
+    "id": 2,
+    "name": "Iphone 6",
+    "price": 1233.0,
+    "rating": 2.0,
+    "description": "sdf",
+    "discount": 2.0,
+    "quantity": 2
+}
